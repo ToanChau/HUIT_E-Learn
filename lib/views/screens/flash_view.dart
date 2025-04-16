@@ -11,9 +11,7 @@ class _FlashViewState extends State<FlashView> {
   @override
   void initState() {
     super.initState();
-    // Add a delay to simulate the splash screen
     Future.delayed(Duration(seconds: 2), () {
-      // Navigate to login screen
       if (mounted) {
         context.go('/login');
       }
