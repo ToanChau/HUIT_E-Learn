@@ -76,10 +76,32 @@ class SearchOnSearchScreenEvent extends DocEvent {
 
 class SearchChoseDocEvent extends DocEvent {
   Document document;
-  SearchChoseDocEvent({
-    required this.document,
-  });
+  SearchChoseDocEvent({required this.document});
   @override
   // TODO: implement props
   List<Object?> get props => [document];
+}
+
+class VoteDocEvent extends DocEvent {
+  Document document;
+  VoteDocEvent({required this.document});
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [document];
+}
+
+class SendReport extends DocEvent {
+ final Document document;
+  final String noiDung;
+  final String maNguoiDung;
+  
+  SendReport({
+    required this.document,
+    required this.noiDung,
+    required this.maNguoiDung,
+  });
+  
+  @override
+  List<Object?> get props => [document, noiDung, maNguoiDung];
 }

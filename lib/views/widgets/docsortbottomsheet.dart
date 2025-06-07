@@ -13,7 +13,7 @@ enum SortOption {
 class DocumentSortBottomSheet extends StatelessWidget {
   final List<Document> documents;
   final Function(List<Document>, SortOption) onSort;
-  
+
   const DocumentSortBottomSheet({
     Key? key,
     required this.documents,
@@ -22,7 +22,7 @@ class DocumentSortBottomSheet extends StatelessWidget {
 
   void _sortDocuments(BuildContext context, SortOption option) {
     List<Document> sortedDocs = List.from(documents);
-    
+
     switch (option) {
       case SortOption.nameAscending:
         sortedDocs.sort((a, b) => a.maTaiLieu.compareTo(b.maTaiLieu));
@@ -43,7 +43,7 @@ class DocumentSortBottomSheet extends StatelessWidget {
         sortedDocs.sort((a, b) => a.kichThuoc.compareTo(b.kichThuoc));
         break;
     }
-    
+
     onSort(sortedDocs, option);
     Navigator.pop(context);
   }
@@ -53,7 +53,7 @@ class DocumentSortBottomSheet extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
@@ -112,19 +112,27 @@ class DocumentSortBottomSheet extends StatelessWidget {
     return InkWell(
       onTap: () => _sortDocuments(context, option),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        child: Row(
-          children: [
-            Icon(icon, color: Colors.black54, size: 24),
-            SizedBox(width: 16),
-            Text(
-              text,
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-              ),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color:Theme.of(context).brightness == Brightness.dark
+        ? const Color.fromARGB(255, 35, 35, 35)
+        :Colors.white,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Icon(icon, size: 24),
+                SizedBox(width: 16),
+                Text(
+                  text,
+                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

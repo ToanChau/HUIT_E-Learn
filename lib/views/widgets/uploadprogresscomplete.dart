@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 class UploadProgressComplete extends StatelessWidget {
   final String fileName;
 
-  const UploadProgressComplete({Key? key, required this.fileName})
-    : super(key: key);
+  const UploadProgressComplete({super.key, required this.fileName});
 
   @override
   Widget build(BuildContext context) {

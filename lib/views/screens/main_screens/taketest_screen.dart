@@ -172,7 +172,7 @@ class _TaketestScreenState extends State<TaketestScreen> {
                         state.selectedAnswer == null,
                         context,
                       );
-                    }).toList(),
+                    }),
                     const SizedBox(height: 30),
                     ElevatedButton(
                       onPressed:
@@ -211,7 +211,7 @@ class _TaketestScreenState extends State<TaketestScreen> {
             ),
             body: Center(
               child: Text(
-                'Đã xảy ra lỗi: ${(state as TaketestErrorState).errorMessage}',
+                'Đã xảy ra lỗi: ${state.errorMessage}',
                 style: TextStyle(color: Colors.red),
               ),
             ),

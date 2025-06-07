@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:huit_elearn/models/tests.dart';
 
 class QuestionRespository {
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<List<Question>> GetQuestionsByIds(List<String> questionsIds) async {
     try {
@@ -57,7 +57,6 @@ class QuestionRespository {
 
       return await _buildQuestionsFromDocs(selectedDocs);
     } catch (e) {
-      print("Error getting random questions: $e");
       return [];
     }
   }

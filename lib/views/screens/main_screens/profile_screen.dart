@@ -56,7 +56,7 @@ class ProfileScreen extends StatelessWidget {
                         "Đổi mật khẩu",
                         "Đổi mật khẩu của bạn",
                         () {
-                          context.push('/edit');
+                          context.push('/changepass');
                         },
                       ),
                       ProfileItem(
@@ -64,7 +64,7 @@ class ProfileScreen extends StatelessWidget {
                         "Thư viện của tôi",
                         "Quản lý tất cả các tập tin của bạn",
                         () {
-                          context.push('/edit');
+                          context.push('/library');
                         },
                       ),
                       ProfileItem(

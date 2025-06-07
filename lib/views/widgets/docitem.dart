@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:huit_elearn/models/documents.dart';
+import '../../models/documents.dart';
 
-Widget DocItem({required Document document}) {
+Widget DocItem({required Document document,required Function() onContainerTap,required Function() onDetailTap
+ }) {
   final Map<String, String> fileIcons = {
   "pdf": "assets/icons/pdf_icon.svg",
   "docx": "assets/icons/doc_icon.svg",
@@ -15,54 +16,55 @@ String path = fileIcons[document.loai.toLowerCase()] ?? "assets/icons/txt_icon.s
 
   return Padding(
     padding: const EdgeInsets.all(10.0),
-    child: Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SvgPicture.asset(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        GestureDetector(
+          child: SvgPicture.asset(
             path,
             fit: BoxFit.scaleDown,
           ),
-          Expanded(
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 8,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        document.tenTaiLieu,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12,
-                        ),
+          onTap: () => onContainerTap(),
+        ),
+        Expanded(
+          child: Row(
+            children: [
+              Expanded(
+                flex: 8,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      document.tenTaiLieu,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 12,
                       ),
-                      Text(
-                        document.ngayDang.toString(),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: Colors.grey, fontSize: 12),
-                      ),
-                    ],
-                  ),
+                    ),
+                    Text(
+                      document.ngayDang.toString(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: Colors.grey, fontSize: 12),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  flex: 1,
-                  child: GestureDetector(
-                    child: Icon(Icons.more_vert_outlined),
-                    onTap: () {},
-                  ),
+              ),
+              Expanded(
+                flex: 2,
+                child: GestureDetector(
+                  child: Icon(Icons.more_vert_outlined),
+                  onTap: ()=>onDetailTap(),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     ),
   );
 }

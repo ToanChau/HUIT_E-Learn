@@ -9,6 +9,8 @@ import 'package:huit_elearn/viewModels/auth/auth_state.dart';
 import 'package:huit_elearn/viewModels/editprofile/profileEdit_bloc.dart';
 import 'package:huit_elearn/viewModels/editprofile/profileEdit_event.dart';
 import 'package:huit_elearn/viewModels/editprofile/profileEdit_state.dart';
+import 'package:huit_elearn/views/widgets/customdatefield.dart';
+import 'package:huit_elearn/views/widgets/customtextfield.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -215,17 +217,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
                             children: [
-                              _buildTextField(
+                              buildTextField(
                                 lable: "Họ và tên",
                                 controller: _nameController,
                               ),
                               SizedBox(height: 16),
-                              _buildTextField(
+                              buildTextField(
                                 lable: "Giới tính",
                                 controller: _gioiTinhController,
                               ),
                               SizedBox(height: 16),
-                              _buildDateField(
+                              buildDateField(
                                 label: "Ngày sinh",
                                 controller: _dOBController,
                                 onTap: () => _selectDate(context),
@@ -251,13 +253,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                               ),
                                             );
                                           },
-                                          child: Text(
-                                            "Lưu",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Color.fromARGB(
                                               255,
@@ -268,6 +263,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(10),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            "Lưu",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                         ),
@@ -284,100 +286,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           },
         ),
       ),
-    );
-  }
-
-  Widget _buildTextField({
-    required String lable,
-    required TextEditingController controller,
-  }) {
-    return Wrap(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
-          child: Text(
-            lable,
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
-          ),
-        ),
-        SizedBox(
-          height: 40,
-          child: TextField(
-            cursorColor: Colors.black,
-            cursorHeight: 20,
-            controller: controller,
-            style: TextStyle(fontSize: 12),
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Colors.grey, width: 0.5),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(
-                  color: Colors.grey[350] ?? Colors.grey,
-                  width: 0.5,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(
-                  color: Colors.grey[350] ?? Colors.grey,
-                  width: 0.5,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDateField({
-    required String label,
-    required TextEditingController controller,
-    required VoidCallback onTap,
-  }) {
-    return Wrap(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
-          child: Text(
-            label,
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
-          ),
-        ),
-        SizedBox(
-          height: 40,
-          child: TextField(
-            readOnly: true,
-            controller: controller,
-            style: TextStyle(fontSize: 12),
-            onTap: onTap,
-            decoration: InputDecoration(
-              suffixIcon: Icon(Icons.calendar_today, size: 16),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Colors.grey, width: 0.5),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(
-                  color: Colors.grey[350] ?? Colors.grey,
-                  width: 0.5,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(
-                  color: Colors.grey[350] ?? Colors.grey,
-                  width: 0.5,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

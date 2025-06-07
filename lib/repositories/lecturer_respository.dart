@@ -7,11 +7,9 @@ class LecturerRespository {
   Future<List<Lecturer>> getListLecturerByListId(List<String>? listID) async {
   try {
     if (listID == null || listID.isEmpty) {
-      print("Danh sách ID giảng viên trống hoặc null");
       return [];
     }
     
-    print("Đang tải ${listID.length} giảng viên với ID: $listID");
     
     QuerySnapshot querySnapshot = await _firestore
         .collection('lecturers')
@@ -21,11 +19,8 @@ class LecturerRespository {
     final results = querySnapshot.docs
         .map((doc) => Lecturer.fromMap(doc.data() as Map<String, dynamic>))
         .toList();
-    
-    print("Đã tải được ${results.length} giảng viên");
     return results;
   } catch (e) {
-    print('Lỗi khi lấy danh sách giảng viên theo ID: $e');
     return [];
   }
 }

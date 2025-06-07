@@ -38,7 +38,7 @@ Widget TestBox(
           const SizedBox(height: 5),
           Flexible(
             child: Text(
-              "Đề số ${index}",
+              "Đề số $index",
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
             ),
           ),

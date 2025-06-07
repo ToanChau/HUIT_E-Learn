@@ -17,7 +17,7 @@ class QuestionGeneratorService {
   }) async {
     try {
       final response = await http.post(
-        Uri.parse('http://local:5555/v1/chat/completions'),
+        Uri.parse('http://192.168.2.8:5555/v1/chat/completions'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           "model": "local-model",

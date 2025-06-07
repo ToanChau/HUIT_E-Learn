@@ -1,11 +1,12 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:huit_elearn/models/documents.dart';
 import 'package:huit_elearn/models/faculty.dart';
+import 'package:huit_elearn/models/report.dart';
 import 'package:huit_elearn/models/subjects.dart';
 import 'package:huit_elearn/repositories/document_repository.dart';
 import 'package:huit_elearn/repositories/faculty_repository.dart';
 import 'package:huit_elearn/repositories/lecturer_respository.dart';
+import 'package:huit_elearn/repositories/report_repository.dart';
 import 'package:huit_elearn/repositories/subject_repository.dart';
 import 'package:huit_elearn/viewModels/doc/doc_event.dart';
 import 'package:huit_elearn/viewModels/doc/doc_state.dart';
@@ -15,6 +16,8 @@ class DocBloc extends Bloc<DocEvent, DocState> {
   final SubjectRepository subjectRepository;
   final DocumentRepository documentRepository;
   final LecturerRespository lecturerRespository;
+  final ReportRepository reportRepository = ReportRepository();
+
   DocBloc({
     required this.facultyRepository,
     required this.subjectRepository,
@@ -31,9 +34,108 @@ class DocBloc extends Bloc<DocEvent, DocState> {
     on<DocSearchEvent>(_onDocSearch);
     on<SearchOnSearchScreenEvent>(_onSearchOnSearchScreen);
     on<SearchChoseDocEvent>(_onSearchChoseDoc);
+    on<VoteDocEvent>(_onVoteDoc);
+    on<SendReport>(_onSendReport);
   }
+
   void _onSearchChoseDoc(SearchChoseDocEvent event, Emitter<DocState> emit) {
     emit(SearchChoseDocState(document: event.document));
+  }
+
+  void _onSendReport(SendReport event, Emitter<DocState> emit) async {
+  // Lưu state hiện tại trước khi gửi report
+  final previousState = state;
+  
+  try {
+    emit(DocReportSendingState(document: event.document));
+
+    final reportId = 'RPT_${DateTime.now().millisecondsSinceEpoch}';
+
+    final report = Report(
+      MaBaoCao: reportId,
+      MaNguoiDung: event.maNguoiDung,
+      MaTaiLieu: event.document.maTaiLieu,
+      NoiDung: event.noiDung,
+      TrangThai: 'Chờ duyệt',
+    );
+
+    await reportRepository.sendReport(report);
+
+    emit(
+      DocReportSentState(
+        document: event.document,
+        message: 'Báo cáo đã được gửi thành công!',
+      ),
+    );
+
+    await Future.delayed(Duration(seconds: 2));
+    
+    if (previousState is DocChoseDoc) {
+      emit(DocChoseDoc(
+        faculty: previousState.faculty,
+        subject: previousState.subject,
+        document: event.document, 
+      ));
+    } else if (previousState is SearchChoseDocState) {
+      emit(SearchChoseDocState(document: event.document));
+    } else if (previousState is DocDownloadingState) {
+      emit(DocDownloadingState(
+        document: event.document,
+        progress: previousState.progress,
+        remainingSeconds: previousState.remainingSeconds,
+        faculty: previousState.faculty,
+        subject: previousState.subject,
+      ));
+    } else if (previousState is DocDownloadCompleteState) {
+      emit(DocDownloadCompleteState(
+        document: event.document,
+        faculty: previousState.faculty,
+        subject: previousState.subject,
+      ));
+    } else {
+      emit(SearchChoseDocState(document: event.document));
+    }
+    
+  } catch (e) {
+    emit(DocErrorState(message: "Không thể gửi báo cáo: $e"));
+  }
+}
+
+  void _onVoteDoc(VoteDocEvent event, Emitter<DocState> emit) async {
+    try {
+      await documentRepository.voteDocument(event.document.maTaiLieu);
+
+      final updatedDocument = Document(
+        maTaiLieu: event.document.maTaiLieu,
+        tenTaiLieu: event.document.tenTaiLieu,
+        ngayDang: event.document.ngayDang,
+        nguoiDang: event.document.nguoiDang,
+        moTa: event.document.moTa,
+        kichThuoc: event.document.kichThuoc,
+        loai: event.document.loai,
+        trangThai: event.document.trangThai,
+        maMH: event.document.maMH,
+        uRL: event.document.uRL,
+        luotTaiVe: event.document.luotTaiVe,
+        luotThich: (event.document.luotThich ?? 0) + 1,
+        previewImages: event.document.previewImages,
+      );
+
+      if (state is DocChoseDoc) {
+        final currentState = state as DocChoseDoc;
+        emit(
+          DocChoseDoc(
+            faculty: currentState.faculty,
+            subject: currentState.subject,
+            document: updatedDocument,
+          ),
+        );
+      } else if (state is SearchChoseDocState) {
+        emit(SearchChoseDocState(document: updatedDocument));
+      }
+    } catch (e) {
+      emit(DocErrorState(message: "Không thể thích tài liệu: $e"));
+    }
   }
 
   void _onSearchOnSearchScreen(
@@ -204,7 +306,6 @@ class DocBloc extends Bloc<DocEvent, DocState> {
       emit(
         DocSearchState(faculties: filteredFaculties, searchQuery: searchQuery),
       );
-      //ở màn tìm kiếm khoa
     } else if (currentState is DocSearchState && searchQuery.isEmpty) {
       final faculties = await facultyRepository.getAllFaculties();
       emit(DocLoadedState(faculties));

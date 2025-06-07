@@ -1,6 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
-
 import 'package:huit_elearn/models/documents.dart';
 import 'package:huit_elearn/models/faculty.dart';
 import 'package:huit_elearn/models/lecturer.dart';
@@ -19,14 +17,14 @@ class DocInitialState extends DocState {
 class DocErrorState extends DocState {
   final String message;
   DocErrorState({required this.message});
+  
   @override
-  // TODO: implement props
   List<Object?> get props => [message];
+  
 }
 
 class DocLoadingState extends DocState {
   @override
-  // TODO: implement props
   List<Object?> get props => [];
 }
 
@@ -34,7 +32,6 @@ class DocLoadedState extends DocState {
   final List<Faculty> faculties;
   DocLoadedState(this.faculties);
   @override
-  // TODO: implement props
   List<Object?> get props => faculties;
 }
 
@@ -43,7 +40,6 @@ class DocChoseDetailFaculty extends DocState {
   final List<Lecturer> lecturers;
   DocChoseDetailFaculty({required this.faculty, required this.lecturers});
   @override
-  // TODO: implement props
   List<Object?> get props => [faculty];
 }
 
@@ -52,7 +48,6 @@ class DocChoseFaculty extends DocState {
   final List<Subject> subjects;
   DocChoseFaculty({required this.faculty, required this.subjects});
   @override
-  // TODO: implement props
   List<Object?> get props => [faculty, subjects];
 }
 
@@ -61,7 +56,6 @@ class DocChoseDetailSubject extends DocState {
   final Subject subject;
   DocChoseDetailSubject({required this.faculty, required this.subject});
   @override
-  // TODO: implement props
   List<Object?> get props => [faculty, subject];
 }
 
@@ -75,7 +69,6 @@ class DocChoseSubject extends DocState {
     required this.documents,
   });
   @override
-  // TODO: implement props
   List<Object?> get props => [faculty, subject, documents];
 }
 
@@ -90,7 +83,6 @@ class DocChoseDoc extends DocState {
     required this.document,
   });
   @override
-  // TODO: implement props
   List<Object?> get props => [faculty, subject, document];
 }
 
@@ -192,4 +184,23 @@ class SearchChoseDocState extends DocState {
   });
   @override
   List<Object?> get props => [document];
+}
+
+class DocReportSendingState extends DocState {
+  final Document document;
+  
+  DocReportSendingState({required this.document});
+  
+  @override
+  List<Object?> get props => [document];
+}
+
+class DocReportSentState extends DocState {
+  final Document document;
+  final String message;
+  
+  DocReportSentState({required this.document, required this.message});
+  
+  @override
+  List<Object?> get props => [document, message];
 }

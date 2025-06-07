@@ -7,12 +7,12 @@ class UploadProgress extends StatelessWidget {
   final VoidCallback onCancel;
 
   const UploadProgress({
-    Key? key,
+    super.key,
     required this.fileName,
     required this.progress,
     required this.remainingTime,
     required this.onCancel,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -7,7 +7,7 @@ import 'package:huit_elearn/models/tests.dart';
 import 'package:huit_elearn/repositories/test_repository.dart';
 
 class RagService {
-  final String _baseUrl = 'http://local:5000';
+  final String _baseUrl = 'http://192.168.2.8:5000';
 
   Future<bool> processDocument({
     required String documentPath,
@@ -65,6 +65,9 @@ class RagService {
       if (content.trim().endsWith('```')) {
         content = content.substring(0, content.length - 3).trim();
       }
+      if (content.trim().startsWith('"questions":')) {
+      content = '{' + content + '}';
+    }
       // tạo câu hỏi giống bên kia
       final jsonData = jsonDecode(content);
       final List<Question> questions = [];

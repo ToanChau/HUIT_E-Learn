@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:huit_elearn/models/faculty.dart';
+import 'package:huit_elearn/views/screens/main_screens/changepass_screen.dart';
 import 'package:huit_elearn/views/screens/main_screens/create_screen.dart';
 import 'package:huit_elearn/views/screens/main_screens/detail_faculty_screen.dart';
 import 'package:huit_elearn/views/screens/main_screens/detail_subject_screen.dart';
@@ -27,17 +28,13 @@ final GoRouter router = GoRouter(
     GoRoute(path: '/flash', builder: (context, state) => const FlashView()),
     GoRoute(path: '/login', builder: (context, state) => const LoginView()),
     GoRoute(path: '/signin', builder: (context, state) => const SigninView()),
-    GoRoute(
-      path: '/faculty',
-      builder: (context, state) => FacultyScreen(),
-    ),
-    GoRoute(
-      path: '/subject',
-      builder: (context, state) => SubjectScreen(),
-    ),
+    GoRoute(path: '/faculty', builder: (context, state) => FacultyScreen()),
+    GoRoute(path: '/subject', builder: (context, state) => SubjectScreen()),
     GoRoute(
       path: '/detailfaculty',
-      builder: (context, state) => DetailFacultyScreen(faculty: state.extra as Faculty,),
+      builder:
+          (context, state) =>
+              DetailFacultyScreen(faculty: state.extra as Faculty),
     ),
     GoRoute(
       path: '/detailsubject',
@@ -47,17 +44,19 @@ final GoRouter router = GoRouter(
     GoRoute(path: '/taketest', builder: (context, state) => TaketestScreen()),
     GoRoute(path: '/accept', builder: (context, state) => LibraryAcceptdoc()),
     GoRoute(path: '/edit', builder: (context, state) => EditProfileScreen()),
+    GoRoute(path: '/changepass', builder: (context, state) => ChangepassScreen()),
 
 
     ShellRoute(
       navigatorKey: _shellNavigatorKey,
       builder: (context, state, child) {
-        return MainView(child: child, location: state.uri.toString());
+        return MainView(location: state.uri.toString(), child: child);
       },
       routes: [
         GoRoute(
           path: '/home',
-          builder: (context, state) => HomeSceen(control: MainView.controller),
+          builder:
+              (context, state) => HomeSceen(controller: MainView.controller),
           routes: [],
         ),
 

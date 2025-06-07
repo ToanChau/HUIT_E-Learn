@@ -12,7 +12,7 @@ class ProfileEditBloc extends Bloc<ProfileEditEvent, ProfileEditState> {
   final AuthBloc authBloc;
   UserModel? currentUser;
   File? temAvatarFile;
-  
+
   ProfileEditBloc({required this.userRepository, required this.authBloc})
     : super(ProfileInitialState()) {
     on<ProfileEditInitialEvent>(_onInitial);
@@ -39,35 +39,33 @@ class ProfileEditBloc extends Bloc<ProfileEditEvent, ProfileEditState> {
     }
     emit(ProfileEditLoadingState());
     try {
-      // Cập nhật thông tin cơ bản
-      UserModel updatedUser = await userRepository.updateUserProfile(
+       UserModel updatedUser = await userRepository.updateUserProfile(
         user: currentUser!,
         newName: event.name,
         newDOB: event.dOB,
         newGender: event.gender,
       );
-      
+
       if (temAvatarFile != null) {
         final avatarUrl = await userRepository.uploadAvatar(
           temAvatarFile!,
           currentUser!.maNguoiDung,
         );
-        
+
         updatedUser = await userRepository.updateUserAvatar(
           user: updatedUser,
           newAvaterUrl: avatarUrl,
         );
-        
+
         temAvatarFile = null;
       }
-      
+
       currentUser = updatedUser;
-      
-      // Cập nhật thông tin ở AuthBloc để các màn hình khác nhận được
+
       if (authBloc.state is AuthAuthenticated) {
         authBloc.emit(AuthAuthenticated(updatedUser));
       }
-      
+
       emit(ProfileEditSuccess(user: updatedUser));
     } catch (e) {
       emit(ProfileEditError("Cập nhật thông tin thất bại: ${e.toString()}"));
@@ -105,11 +103,11 @@ class ProfileEditBloc extends Bloc<ProfileEditEvent, ProfileEditState> {
 
   //     currentUser = updateUser;
   //     temAvatarFile = null;
-      
+
   //     if (authBloc.state is AuthAuthenticated) {
   //       authBloc.emit(AuthAuthenticated(updateUser));
   //     }
-      
+
   //     emit(ProfileAvatarSubmitSuccess(user: updateUser));
   //   } catch (e) {
   //     emit(ProfileEditError("Cập nhật thất bại"));

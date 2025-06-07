@@ -15,12 +15,12 @@ class NumberedStepper extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: List.generate(stepTitles.length, (index) {
-        return _buildStepItem(index);
+        return _buildStepItem(context,index);
       }),
     );
   }
 
-  Widget _buildStepItem(int index) {
+  Widget _buildStepItem(BuildContext context,int index) {
     final isCurrent = index == currentStep;
     return Expanded(
       flex: isCurrent ? 4 : 2,
@@ -63,7 +63,9 @@ class NumberedStepper extends StatelessWidget {
                       stepTitles[index],
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        color: Color.fromARGB(255, 44, 62, 80),
+                        color:Theme.of(context).brightness == Brightness.dark
+        ? Colors.white
+        :  Color.fromARGB(255, 44, 62, 80),
                       ),
                     )
                     : Text(""),

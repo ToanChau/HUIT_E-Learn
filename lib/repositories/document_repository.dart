@@ -68,7 +68,7 @@ class DocumentRepository {
         final Reference fileRef = _store.refFromURL(url);
         await fileRef.delete();
       } catch (e) {
-        print('Lỗi khi xóa tệp: $e');
+        throw Exception('Failed to delete file from Firebase Storage: $e');
       }
     }
   }
@@ -134,10 +134,13 @@ class DocumentRepository {
   }
 
   Future<List<Document>> getAcceptedDocument(String nguoiDang) async {
-    QuerySnapshot querySnapshot = await _firestore
-        .collection('documents')
-        .where("nguoiDang", isEqualTo: nguoiDang).where("trangThai",isEqualTo: "Đã duyệt").get();
-        return querySnapshot.docs.map((doc) {
+    QuerySnapshot querySnapshot =
+        await _firestore
+            .collection('documents')
+            .where("nguoiDang", isEqualTo: nguoiDang)
+            .where("trangThai", isEqualTo: "Đã duyệt")
+            .get();
+    return querySnapshot.docs.map((doc) {
       return Document(
         maTaiLieu: doc.id,
         tenTaiLieu: doc["tenTaiLieu"],
@@ -158,11 +161,15 @@ class DocumentRepository {
       );
     }).toList();
   }
-   Future<List<Document>> getUnAcceptedDocument(String nguoiDang) async {
-    QuerySnapshot querySnapshot = await _firestore
-        .collection('documents')
-        .where("nguoiDang", isEqualTo: nguoiDang).where("trangThai",isEqualTo: "Chờ duyệt").get();
-        return querySnapshot.docs.map((doc) {
+
+  Future<List<Document>> getUnAcceptedDocument(String nguoiDang) async {
+    QuerySnapshot querySnapshot =
+        await _firestore
+            .collection('documents')
+            .where("nguoiDang", isEqualTo: nguoiDang)
+            .where("trangThai", isEqualTo: "Chờ duyệt")
+            .get();
+    return querySnapshot.docs.map((doc) {
       return Document(
         maTaiLieu: doc.id,
         tenTaiLieu: doc["tenTaiLieu"],
@@ -220,7 +227,7 @@ class DocumentRepository {
     try {
       var status = await Permission.storage.request();
       if (!status.isGranted) {
-        throw Exception('Storage permission denied');
+        throw Exception('Chưa được cấp quyền lưu trữ');
       }
 
       final dio = Dio();
@@ -270,5 +277,15 @@ class DocumentRepository {
       return path.substring(lastDotIndex);
     }
     return '';
+  }
+
+  Future<void> voteDocument(String documentid) async {
+    try {
+      await _firestore.collection("documents").doc(documentid).update({
+        'luotThich': FieldValue.increment(1),
+      });
+    } catch (e) {
+      throw (e);
+    }
   }
 }

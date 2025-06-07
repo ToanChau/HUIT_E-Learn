@@ -28,7 +28,9 @@ class _DotboxState extends State<DotBox> {
               Text(
                 "Tải các tập tin của bạn",
                 style: TextStyle(
-                  color: Color.fromARGB(255, 44, 62, 80),
+                  color:Theme.of(context).brightness == Brightness.dark
+        ? Colors.white
+        : Color.fromARGB(255, 44, 62, 80),
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
                 ),
@@ -39,6 +41,10 @@ class _DotboxState extends State<DotBox> {
               ),
               SizedBox(height: 15),
               DottedBorder(
+                color:
+                    Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
                 borderType: BorderType.RRect,
                 strokeWidth: 1.5,
                 strokeCap: StrokeCap.butt,
@@ -82,10 +88,7 @@ class _DotboxState extends State<DotBox> {
                             ),
                             child: Text(
                               "Duyệt tập tin",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 13,
-                              ),
+                              style: TextStyle(fontSize: 13),
                             ),
                           ),
                         )

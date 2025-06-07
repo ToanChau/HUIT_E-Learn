@@ -23,7 +23,6 @@ class FacultyRepository {
         );
       }).toList();
     } catch (e) {
-      print("Lỗi");
       return [];
     }
   }

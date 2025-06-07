@@ -5,7 +5,7 @@ Widget ProfileItem(IconData icon, String title, String subTitle,VoidCallback ont
     padding: EdgeInsets.all(8),
     child: Container(
       child: ListTile(
-        leading: Icon(icon, color: Colors.black),
+        leading: Icon(icon),
         title: Text(title, style: TextStyle(fontWeight: FontWeight.bold,fontSize: 13)),
         subtitle: Text(subTitle,maxLines: 1,style: TextStyle(fontSize: 12)),
         trailing: Icon(Icons.arrow_forward_ios, size: 16),

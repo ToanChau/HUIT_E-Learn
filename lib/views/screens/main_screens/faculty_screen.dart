@@ -15,7 +15,7 @@ class FacultyScreen extends StatefulWidget {
   const FacultyScreen({super.key});
 
   @override
-  _FacultyScreenState createState() => _FacultyScreenState();
+  State<FacultyScreen> createState() => _FacultyScreenState();
 }
 
 class _FacultyScreenState extends State<FacultyScreen> {
@@ -45,53 +45,60 @@ class _FacultyScreenState extends State<FacultyScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: CustomScrollView(
-        controller: _controller,
-        slivers: [
-          SliverAppbarMainCustom(size: size, searchBar: true, menuIcon: false),
-          BlocBuilder<DocBloc, DocState>(
-            builder: (context, state) {
-              if (state is DocLoadingState) {
-                return SliverToBoxAdapter(
-                  child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(32.0),
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                );
-              } else if (state is DocErrorState) {
-                return SliverToBoxAdapter(
-                  child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(32.0),
-                      child: Column(
-                        children: [
-                          Text(
-                            state.message,
-                            style: TextStyle(color: Colors.red),
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(height: 16),
-                          ElevatedButton(
-                            onPressed: () {
-                              BlocProvider.of<DocBloc>(
-                                context,
-                              ).add(DocInitialEvent());
-                            },
-                            child: Text("Thử lại"),
-                          ),
-                        ],
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        body: CustomScrollView(
+          controller: _controller,
+          slivers: [
+            SliverAppbarMainCustom(
+              size: size,
+              searchBar: true,
+              menuIcon: false,
+              onlyserachbar: true,
+            ),
+            BlocBuilder<DocBloc, DocState>(
+              builder: (context, state) {
+                if (state is DocLoadingState) {
+                  return SliverToBoxAdapter(
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(32.0),
+                        child: CircularProgressIndicator(),
                       ),
                     ),
-                  ),
-                );
-              } else if (state is DocChoseFaculty) {
-                return SliverList(
-                  delegate: SliverChildListDelegate([
-                    Column(
-                      children: [
+                  );
+                } else if (state is DocErrorState) {
+                  return SliverToBoxAdapter(
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(32.0),
+                        child: Column(
+                          children: [
+                            Text(
+                              state.message,
+                              style: TextStyle(color: Colors.red),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 16),
+                            ElevatedButton(
+                              onPressed: () {
+                                BlocProvider.of<DocBloc>(
+                                  context,
+                                ).add(DocInitialEvent());
+                              },
+                              child: Text("Thử lại"),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                } else if (state is DocChoseFaculty) {
+                  return SliverList(
+                    delegate: SliverChildListDelegate([
+                      Column(
+                        children: [
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -107,7 +114,7 @@ class _FacultyScreenState extends State<FacultyScreen> {
                                       style: TextStyle(
                                         fontWeight: FontWeight.w400,
                                         color: Color(0xFF8D6E63),
-                                        fontSize: 15
+                                        fontSize: 15,
                                       ),
                                     ),
                                   ),
@@ -133,9 +140,7 @@ class _FacultyScreenState extends State<FacultyScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder:
-                                            (context) =>
-                                                SubjectScreen(),
+                                        builder: (context) => SubjectScreen(),
                                       ),
                                     );
                                   },
@@ -159,94 +164,88 @@ class _FacultyScreenState extends State<FacultyScreen> {
                               ),
                             ],
                           ),
-                      ],
-                    ),
-                  ]),
-                );
-              }
-              else if(state is DocSearchFacultyState)
-              {
-                return SliverList(
-                  delegate: SliverChildListDelegate([
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          child: Center(
-                            child: Text(
-                              state.subjects.isEmpty
-                                  ? "Không tìm thấy khoa nào"
-                                  : "Kết quả tìm kiếm: ${state.subjects.length} khoa",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16,
-                                color: Color(0xFF8D6E63),
+                        ],
+                      ),
+                    ]),
+                  );
+                } else if (state is DocSearchFacultyState) {
+                  return SliverList(
+                    delegate: SliverChildListDelegate([
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            child: Center(
+                              child: Text(
+                                state.subjects.isEmpty
+                                    ? "Không tìm thấy khoa nào"
+                                    : "Kết quả tìm kiếm: ${state.subjects.length} khoa",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16,
+                                  color: Color(0xFF8D6E63),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        ...state.subjects.map(
-                                (sub) => OThongTin(
-                                  title: sub.tenMH,
-                                  subtitle: sub.maMH,
-                                  logoWidget:
-                                      sub.anhMon.isNotEmpty
-                                          ? Image.network(sub.anhMon)
-                                          : Image.asset(
-                                            "assets/images/cnm.jpg",
-                                          ),
-                                  onContainerTap: () {
-                                    context.read<DocBloc>().add(
-                                      DocChoseSubjecEvent(
-                                        faculty: state.faculty,
-                                        subject: sub,
-                                      ),
-                                    );
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder:
-                                            (context) =>
-                                                SubjectScreen(),
-                                      ),
-                                    );
-                                  },
-                                  onDetailTap: () {
-                                    context.read<DocBloc>().add(
-                                      DocChoseDetailSubjectEvent(
-                                        faculty: state.faculty,
-                                        subject: sub,
-                                      ),
-                                    );
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder:
-                                            (context) => DetailSubjectScreen(),
-                                      ),
-                                    );
-                                    MainView.hideNav.value = true;
-                                  },
-                                ),
-                              ),
-                      ],
-                    ),
-                  ]),
+                          ...state.subjects.map(
+                            (sub) => OThongTin(
+                              title: sub.tenMH,
+                              subtitle: sub.maMH,
+                              logoWidget:
+                                  sub.anhMon.isNotEmpty
+                                      ? Image.network(sub.anhMon)
+                                      : Image.asset("assets/images/cnm.jpg"),
+                              onContainerTap: () {
+                                context.read<DocBloc>().add(
+                                  DocChoseSubjecEvent(
+                                    faculty: state.faculty,
+                                    subject: sub,
+                                  ),
+                                );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SubjectScreen(),
+                                  ),
+                                );
+                              },
+                              onDetailTap: () {
+                                context.read<DocBloc>().add(
+                                  DocChoseDetailSubjectEvent(
+                                    faculty: state.faculty,
+                                    subject: sub,
+                                  ),
+                                );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DetailSubjectScreen(),
+                                  ),
+                                );
+                                MainView.hideNav.value = true;
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ]),
+                  );
+                }
+                return SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
                 );
-              }
-              return SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Center(child: CircularProgressIndicator()),
-                ),
-              );
-            },
-          ),
-        ],
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

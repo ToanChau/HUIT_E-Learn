@@ -57,11 +57,38 @@ class UserRepository {
     required String newAvaterUrl,
   }) async {
     UserModel updateUser = user.copyWith(anhDaiDien: newAvaterUrl);
-    
+
     await _firestore.collection('users').doc(user.maNguoiDung).update({
       'anhDaiDien': newAvaterUrl,
     });
 
     return updateUser;
+  }
+
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    User? user = _auth.currentUser;
+    if (user == null) {
+      throw Exception("Không tìm thấy người dùng đăng nhập");
+    }
+
+    if (user.email == null) {
+      throw Exception("Người dùng không có email");
+    }
+
+    AuthCredential credential = EmailAuthProvider.credential(
+      email: user.email!,
+      password: currentPassword,
+    );
+
+    await user.reauthenticateWithCredential(credential);
+
+    await user.updatePassword(newPassword);
+
+    await _firestore.collection('users').doc(user.uid).update({
+      'matKhau': newPassword,
+    });
   }
 }

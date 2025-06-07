@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:huit_elearn/models/documents.dart';
 
-Widget DocListItem({required Document document}) {
+Widget DocListItem({required Document document,required Function() onContainerTap, required Function() onDetailTap}) {
   final Map<String, String> fileIcons = {
     "pdf": "assets/icons/pdf_icon.svg",
     "docx": "assets/icons/doc_icon.svg",
@@ -26,12 +26,15 @@ Widget DocListItem({required Document document}) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20),
     child: ListTile(
+      onTap: () => onContainerTap(),
       contentPadding: EdgeInsets.zero,
-      leading: SizedBox(
-        height: 30,width: 30,child: SvgPicture.asset(path, fit: BoxFit.scaleDown)),
+      leading: 
+       SizedBox(
+          height: 30,width: 30,child: SvgPicture.asset(path, fit: BoxFit.scaleDown)),
+      
       title: Text(document.tenTaiLieu, style: TextStyle(fontSize: 13,fontWeight: FontWeight.w600),overflow: TextOverflow.ellipsis,maxLines: 1,),
       subtitle: Text("${DateFormat('dd/MM/yyyy').format(document.ngayDang)} • ${formatFileSize(document.kichThuoc)}",style: TextStyle(fontSize: 13,color: Colors.grey),overflow: TextOverflow.ellipsis,maxLines: 1,),
-      trailing: Icon(Icons.more_vert),
+      trailing: GestureDetector(onTap: ()=> onDetailTap(),child: Icon(Icons.more_vert)),
     ),
   );
 }
